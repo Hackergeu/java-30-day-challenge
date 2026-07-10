@@ -15,8 +15,8 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 ### Phase 1: Fundamentals (Day 1–8)
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
-| 1 | [Number Guessing Game]| Random, Scanner, Loops, Conditionals | ✅ |
-| 2 | [Simple Calculator (CLI)]| switch-case, char, do-while loop | 🔲 |
+| 1 | Number Guessing Game| Random, Scanner, Loops, Conditionals | ✅ |
+| 2 | Simple Calculator (CLI)| switch-case, char, do-while loop | 🔲 |
 | 3 | Rock Paper Scissor (vs Computer) | Random class, Loops, best-of-N logic | 🔲 |
 | 4 | ATM Simulation (single account) | Methods, validation, do-while | 🔲 |
 | 5 | Student Grade Calculator | Arrays, loops, conditionals | 🔲 |
