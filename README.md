@@ -16,7 +16,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
 | 1 | [Number Guessing Game](./day01-number-guessing-game) | Random, Scanner, Loops, Conditionals | ✅ |
-| 2 | [Simple Calculator (CLI)](./day02-calculator) | switch-case, char, do-while loop | ✅ |
+| 2 | [Simple Calculator (CLI)](./day02-calculator) | switch-case, char, do-while loop | 🔲 |
 | 3 | Rock Paper Scissor (vs Computer) | Random class, Loops, best-of-N logic | 🔲 |
 | 4 | ATM Simulation (single account) | Methods, validation, do-while | 🔲 |
 | 5 | Student Grade Calculator | Arrays, loops, conditionals | 🔲 |
