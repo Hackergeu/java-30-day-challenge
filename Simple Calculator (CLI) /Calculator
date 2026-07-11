@@ -1,0 +1,70 @@
+import java.util.Scanner;
+
+public class Calculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char key;
+        
+        System.out.println("Welcome to Simple Calculator!");
+        
+        do 
+        {
+        System.out.print("Enter first number: ");
+        double num1 = sc.nextDouble();
+        
+        System.out.print("Enter operator (+, -, *, /, %): ");
+        char operator = sc.next().charAt(0);
+        
+        System.out.print("Enter second number: ");
+        double num2 = sc.nextDouble();
+        
+        double result = 0;
+
+        switch(operator)
+        {
+            case '+':
+                result=num1+num2;
+                System.out.println("The result for addition of two numbers is " + result);
+                break;
+
+            case '-':
+                result=num1-num2;
+                System.out.println("The result for subtraction of two numbers is " + result);
+                break;
+
+            case '*':
+                result=num1*num2;
+                System.out.println("The result for multiplication of two numbers is " + result);
+                break;
+
+            case '/':
+                if(num2 == 0)
+                {
+                    System.out.println("Cannot divide by Zero please try again with a different number");
+                    break;
+                }
+                result=num1/num2;
+                System.out.println("The result for division of two numbers is " + result);
+                break;
+
+            case '%':
+                if (num2 == 0) 
+                {
+                    System.out.println("Cannot perform modulus with zero. Please try again.");
+                    break;
+                }
+                result=num1%num2;
+                System.out.println("The result for modulus of two numbers is " + result);
+                break;
+
+            default:
+                System.out.println("Please enter a valid operator to perform any action");
+        }
+        System.out.println("If you wish to continue then press Y or y else press N or n");
+        key=sc.next().charAt(0);
+        }while(key == 'Y' || key == 'y');
+
+        System.out.println("Thank you for using the calculator!");
+        sc.close();
+    }
+}
