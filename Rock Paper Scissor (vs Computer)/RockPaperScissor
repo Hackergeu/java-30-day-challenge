@@ -1,0 +1,85 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class RockPaperScissor {
+
+    enum Move {
+        ROCK, PAPER, SCISSOR
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Random random = new Random();
+
+        int userScore = 0;
+        int computerScore = 0;
+        char playAgain='y';
+
+        System.out.println("Welcome to Rock Paper Scissor!");
+
+        do {
+            System.out.println("\n1 = Rock, 2 = Paper, 3 = Scissor");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+
+            // Validate input
+            if (choice < 1 || choice > 3) {
+                System.out.println("Invalid choice! Please enter 1, 2, or 3.");
+                continue;
+            }
+
+            Move userMove = Move.values()[choice - 1];
+            Move computerMove = Move.values()[random.nextInt(3)];
+
+            System.out.println("You chose: " + userMove);
+            System.out.println("Computer chose: " + computerMove);
+
+            int result = decideWinner(userMove, computerMove);
+
+            if (result == 0) {
+                System.out.println("It's a Tie!");
+            } else if (result == 1) {
+                System.out.println("You Win this round!");
+                userScore++;
+            } else {
+                System.out.println("Computer Wins this round!");
+                computerScore++;
+            }
+
+            System.out.println("Score -> You: " + userScore + " | Computer: " + computerScore);
+
+            System.out.print("\nDo you want to play again? (Y/N): ");
+            playAgain = sc.next().charAt(0);
+
+        } while (playAgain == 'Y' || playAgain == 'y');
+
+        System.out.println("\nFinal Score -> You: " + userScore + " | Computer: " + computerScore);
+        if (userScore > computerScore) {
+            System.out.println("Congratulations! You won the overall game!");
+        } else if (userScore < computerScore) {
+            System.out.println("Computer won the overall game. Better luck next time!");
+        } else {
+            System.out.println("The overall game ended in a Tie!");
+        }
+
+        sc.close();
+    }
+
+    /*
+     * Decides the winner using enum ordinal positions.
+     * ROCK=0, PAPER=1, SCISSOR=2
+     *
+     * A move beats the move whose ordinal is exactly 1 less (in circular fashion).
+     * Using modulo arithmetic avoids writing 9 separate if-else conditions.
+     *
+     * @return 0 = tie, 1 = user wins, -1 = computer wins
+     */
+    private static int decideWinner(Move user, Move computer) {
+        if (user == computer) {
+            return 0;
+        }
+        // (user - computer + 3) % 3 == 1 means user beats computer
+        int diff = (user.ordinal() - computer.ordinal() + 3) % 3;
+        return (diff == 1) ? 1 : -1;
+    }
+}
