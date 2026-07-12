@@ -17,7 +17,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 |-----|---------|----------|--------|
 | 1 | Number Guessing Game| Random, Scanner, Loops, Conditionals | ✅ |
 | 2 | Simple Calculator (CLI)| switch-case, char, do-while loop | ✅ |
-| 3 | Rock Paper Scissor (vs Computer) | Random class, Loops, best-of-N logic | 🔲 |
+| 3 | Rock Paper Scissor (vs Computer) | Random class, Loops, best-of-N logic | ✅ |
 | 4 | ATM Simulation (single account) | Methods, validation, do-while | 🔲 |
 | 5 | Student Grade Calculator | Arrays, loops, conditionals | 🔲 |
 | 6 | Pattern Printing Program | Nested loops | 🔲 |
