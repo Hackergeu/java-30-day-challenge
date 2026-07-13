@@ -1,0 +1,79 @@
+import java.util.Scanner;
+
+public class ATMSimulation {
+
+    static double balance = 5000.0; // starting balance
+    static final int CORRECT_PIN = 1234;
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        System.out.print("Enter your PIN: ");
+        int enteredPin = sc.nextInt();
+
+        if (enteredPin != CORRECT_PIN) {
+            System.out.println("Incorrect PIN. Access Denied.");
+            sc.close();
+            return;
+        }
+
+        System.out.println("PIN Verified! Welcome to the ATM.");
+
+        int choice;
+        do {
+            System.out.println("\n----- ATM MENU -----");
+            System.out.println("1. Check Balance");
+            System.out.println("2. Deposit");
+            System.out.println("3. Withdraw");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> checkBalance();
+                case 2 -> deposit();
+                case 3 -> withdraw();
+                case 4 -> System.out.println("Thank you for using the ATM. Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+
+    static void checkBalance() {
+        System.out.println("Your current balance is: Rs. " + balance);
+    }
+
+    static void deposit() {
+        System.out.print("Enter amount to deposit: Rs. ");
+        double amount = sc.nextDouble();
+
+        if (amount <= 0) {
+            System.out.println("Deposit amount must be positive.");
+            return;
+        }
+
+        balance += amount;
+        System.out.println("Deposit successful! New balance: Rs. " + balance);
+    }
+
+    static void withdraw() {
+        System.out.print("Enter amount to withdraw: Rs. ");
+        double amount = sc.nextDouble();
+
+        if (amount <= 0) {
+            System.out.println("Withdrawal amount must be positive.");
+            return;
+        }
+
+        if (amount > balance) {
+            System.out.println("Insufficient balance! Your current balance is Rs. " + balance);
+            return;
+        }
+
+        balance -= amount;
+        System.out.println("Withdrawal successful! New balance: Rs. " + balance);
+    }
+}
