@@ -1,0 +1,61 @@
+import java.util.Scanner;
+
+public class StudentGradeCalculator {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of subjects: ");
+        int n = sc.nextInt();
+
+        while (n <= 0) {
+            System.out.print("Number of subjects must be positive. Enter again: ");
+            n = sc.nextInt();
+        }
+
+        int[] marks = new int[n];
+        int total = 0;
+
+        for (int i = 0; i < n; i++) {
+            int subjectMarks;
+
+            do {
+                System.out.print("Enter marks for subject " + (i + 1) + " (out of 100): ");
+                subjectMarks = sc.nextInt();
+
+                if (subjectMarks < 0 || subjectMarks > 100) {
+                    System.out.println("Invalid marks! Please enter a value between 0 and 100.");
+                }
+            } while (subjectMarks < 0 || subjectMarks > 100);
+
+            marks[i] = subjectMarks;
+            total += subjectMarks;
+        }
+
+        double percentage = (double) total / n;
+        String grade = calculateGrade(percentage);
+
+        System.out.println("\n----- RESULT -----");
+        System.out.println("Total Marks Obtained: " + total + " / " + (n * 100));
+        System.out.printf("Percentage: %.2f%%\n", percentage);
+        System.out.println("Grade: " + grade);
+
+        sc.close();
+    }
+
+    private static String calculateGrade(double percentage) {
+        if (percentage >= 90) {
+            return "A+";
+        } else if (percentage >= 80) {
+            return "A";
+        } else if (percentage >= 70) {
+            return "B";
+        } else if (percentage >= 60) {
+            return "C";
+        } else if (percentage >= 40) {
+            return "D";
+        } else {
+            return "Fail";
+        }
+    }
+}
