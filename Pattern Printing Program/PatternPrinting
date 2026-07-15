@@ -1,0 +1,106 @@
+import java.util.Scanner;
+
+public class PatternPrinting {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char playAgain;
+
+        do {
+            System.out.println("\n----- PATTERN MENU -----");
+            System.out.println("1. Square Pattern");
+            System.out.println("2. Right Triangle");
+            System.out.println("3. Pyramid");
+            System.out.println("4. Diamond");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+
+            System.out.print("Enter number of rows: ");
+            int rows = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    printSquare(rows);
+                    break;
+                case 2:
+                    printRightTriangle(rows);
+                    break;
+                case 3:
+                    printPyramid(rows);
+                    break;
+                case 4:
+                    printDiamond(rows);
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+            System.out.print("\nDo you want to print another pattern? (Y/N): ");
+            playAgain = sc.next().charAt(0);
+
+        } while (playAgain == 'Y' || playAgain == 'y');
+
+        System.out.println("Goodbye!");
+        sc.close();
+    }
+
+    // 1. Square Pattern
+    static void printSquare(int rows) {
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= rows; j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 2. Right Triangle
+    static void printRightTriangle(int rows) {
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 3. Pyramid
+    static void printPyramid(int rows) {
+        for (int i = 1; i <= rows; i++) {
+            // spaces before stars
+            for (int s = 1; s <= rows - i; s++) {
+                System.out.print("  "); // 2 spaces to match "* " width
+            }
+            // stars (odd progression: 1, 3, 5, ...)
+            for (int j = 1; j <= (2 * i - 1); j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+
+    // 4. Diamond (Pyramid + Inverted Pyramid)
+    static void printDiamond(int rows) {
+        // upper half (pyramid)
+        for (int i = 1; i <= rows; i++) {
+            for (int s = 1; s <= rows - i; s++) {
+                System.out.print("  ");
+            }
+            for (int j = 1; j <= (2 * i - 1); j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+
+        // lower half (inverted pyramid, starts from rows-1 to skip repeating the middle row)
+        for (int i = rows - 1; i >= 1; i--) {
+            for (int s = 1; s <= rows - i; s++) {
+                System.out.print("  ");
+            }
+            for (int j = 1; j <= (2 * i - 1); j++) {
+                System.out.print("* ");
+            }
+            System.out.println();
+        }
+    }
+}
