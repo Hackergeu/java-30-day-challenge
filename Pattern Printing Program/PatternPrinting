@@ -19,20 +19,11 @@ public class PatternPrinting {
             int rows = sc.nextInt();
 
             switch (choice) {
-                case 1:
-                    printSquare(rows);
-                    break;
-                case 2:
-                    printRightTriangle(rows);
-                    break;
-                case 3:
-                    printPyramid(rows);
-                    break;
-                case 4:
-                    printDiamond(rows);
-                    break;
-                default:
-                    System.out.println("Invalid choice!");
+                case 1 -> printSquare(rows);
+                case 2 -> printRightTriangle(rows);
+                case 3 -> printPyramid(rows);
+                case 4 -> printDiamond(rows);
+                default -> System.out.println("Invalid choice!");
             }
 
             System.out.print("\nDo you want to print another pattern? (Y/N): ");
