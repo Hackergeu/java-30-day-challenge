@@ -1,0 +1,94 @@
+import java.util.Scanner;
+
+public class TicTacToe {
+
+    static char[][] board = {
+        {'1', '2', '3'},
+        {'4', '5', '6'},
+        {'7', '8', '9'}
+    };
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        char currentPlayer = 'X';
+        int movesPlayed = 0;
+        boolean gameWon = false;
+
+        System.out.println("Welcome to Tic-Tac-Toe!");
+        printBoard();
+
+        while (movesPlayed < 9 && !gameWon) {
+            System.out.println("\nPlayer " + currentPlayer + "'s turn.");
+            System.out.print("Enter position (1-9): ");
+            int position = sc.nextInt();
+
+            if (position < 1 || position > 9) {
+                System.out.println("Invalid position! Choose a number between 1 and 9.");
+                continue;
+            }
+
+            int row = (position - 1) / 3;
+            int col = (position - 1) % 3;
+
+            if (board[row][col] == 'X' || board[row][col] == 'O') {
+                System.out.println("That cell is already taken! Choose another.");
+                continue;
+            }
+
+            board[row][col] = currentPlayer;
+            movesPlayed++;
+            printBoard();
+
+            gameWon = checkWin(currentPlayer);
+
+            if (gameWon) {
+                System.out.println("\nPlayer " + currentPlayer + " wins! 🎉");
+            } else if (movesPlayed == 9) {
+                System.out.println("\nIt's a Draw!");
+            } else {
+                // switch turn
+                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+            }
+        }
+
+        sc.close();
+    }
+
+    static void printBoard() {
+        System.out.println();
+        for (int i = 0; i < 3; i++) {
+            System.out.println(" " + board[i][0] + " | " + board[i][1] + " | " + board[i][2]);
+            if (i < 2) {
+                System.out.println("---|---|---");
+            }
+        }
+    }
+
+    static boolean checkWin(char player) {
+        // Check all 3 rows
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == player && board[i][1] == player && board[i][2] == player) {
+                return true;
+            }
+        }
+
+        // Check all 3 columns
+        for (int j = 0; j < 3; j++) {
+            if (board[0][j] == player && board[1][j] == player && board[2][j] == player) {
+                return true;
+            }
+        }
+
+        // Check diagonal (top-left to bottom-right)
+        if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+            return true;
+        }
+
+        // Check anti-diagonal (top-right to bottom-left)
+        if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+            return true;
+        }
+
+        return false;
+    }
+}
