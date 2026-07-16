@@ -21,7 +21,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 | 4 | ATM Simulation (single account) | Methods, validation, do-while | ✅ |
 | 5 | Student Grade Calculator | Arrays, loops, conditionals | ✅ |
 | 6 | Pattern Printing Program | Nested loops | ✅ |
-| 7 | Tic-Tac-Toe (2-player, console) | 2D arrays, game logic | 🔲 |
+| 7 | Tic-Tac-Toe (2-player, console) | 2D arrays, game logic | ✅ |
 | 8 | Simple To-Do List (array-based) | 1D arrays, CRUD via arrays | 🔲 |
 
 ### Phase 2: OOP Core (Day 9–15)
