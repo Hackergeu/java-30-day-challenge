@@ -1,0 +1,98 @@
+import java.util.Scanner;
+
+public class LibraryManagementSystem {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Creating a small collection of Book objects
+        Book[] library = new Book[5];
+        library[0] = new Book("Java Basics", "James Gosling");
+        library[1] = new Book("Clean Code", "Robert Martin");
+        library[2] = new Book("Effective Java", "Joshua Bloch");
+        library[3] = new Book("Head First Design Patterns", "Eric Freeman");
+        library[4] = new Book("The Pragmatic Programmer", "Andrew Hunt");
+
+        int bookCount = 5;
+        int choice;
+
+        System.out.println("Welcome to the Library Management System!");
+
+        do {
+            System.out.println("\n----- LIBRARY MENU -----");
+            System.out.println("1. View All Books");
+            System.out.println("2. Borrow a Book");
+            System.out.println("3. Return a Book");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> viewAllBooks(library, bookCount);
+
+                case 2 -> {
+                    viewAllBooks(library, bookCount);
+                    System.out.print("Enter the book number to borrow: ");
+                    int borrowIndex = sc.nextInt() - 1;
+                    borrowBook(library, bookCount, borrowIndex);
+                }
+
+                case 3 -> {
+                    viewAllBooks(library, bookCount);
+                    System.out.print("Enter the book number to return: ");
+                    int returnIndex = sc.nextInt() - 1;
+                    returnBook(library, bookCount, returnIndex);
+                }
+
+                case 4 -> System.out.println("Thank you for using the Library System. Goodbye!");
+
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 4);
+
+        sc.close();
+    }
+
+    static void viewAllBooks(Book[] library, int bookCount) {
+        System.out.println("\n--- Library Catalog ---");
+        for (int i = 0; i < bookCount; i++) {
+            System.out.print((i + 1) + ". ");
+            library[i].displayInfo();
+        }
+    }
+
+    static void borrowBook(Book[] library, int bookCount, int index) {
+        if (index < 0 || index >= bookCount) {
+            System.out.println("Invalid book number!");
+            return;
+        }
+
+        Book selectedBook = library[index];
+
+        if (!selectedBook.isAvailable) {
+            System.out.println("Sorry, \"" + selectedBook.title + "\" is already borrowed.");
+            return;
+        }
+
+        selectedBook.isAvailable = false;
+        System.out.println("You have successfully borrowed \"" + selectedBook.title + "\".");
+    }
+
+    static void returnBook(Book[] library, int bookCount, int index) {
+        if (index < 0 || index >= bookCount) {
+            System.out.println("Invalid book number!");
+            return;
+        }
+
+        Book selectedBook = library[index];
+
+        if (selectedBook.isAvailable) {
+            System.out.println("\"" + selectedBook.title + "\" was not borrowed.");
+            return;
+        }
+
+        selectedBook.isAvailable = true;
+        System.out.println("You have successfully returned \"" + selectedBook.title + "\".");
+    }
+}
