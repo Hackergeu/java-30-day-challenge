@@ -1,0 +1,20 @@
+public class Book {
+
+    // Instance variables — each Book object gets its own copy of these
+    String title;
+    String author;
+    boolean isAvailable;
+
+    // Constructor — runs automatically whenever a new Book object is created
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+        this.isAvailable = true; // new books are available by default
+    }
+
+    // Instance method — prints this specific book's details
+    public void displayInfo() {
+        String status = isAvailable ? "Available" : "Borrowed";
+        System.out.println("\"" + title + "\" by " + author + " [" + status + "]");
+    }
+}
