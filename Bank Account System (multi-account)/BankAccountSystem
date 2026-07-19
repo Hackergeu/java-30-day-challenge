@@ -1,0 +1,130 @@
+import java.util.Scanner;
+
+public class BankAccountSystem {
+
+    static final int MAX_ACCOUNTS = 10;
+    static Account[] accounts = new Account[MAX_ACCOUNTS];
+    static int accountCount = 0;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        System.out.println("Welcome to the Bank Account Management System!");
+
+        do {
+            System.out.println("\n----- BANK MENU -----");
+            System.out.println("1. Create New Account");
+            System.out.println("2. View All Accounts");
+            System.out.println("3. Deposit Money");
+            System.out.println("4. Withdraw Money");
+            System.out.println("5. Check Balance");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume leftover newline
+
+            switch (choice) {
+                case 1 -> createAccount(sc);
+                case 2 -> viewAllAccounts();
+                case 3 -> performDeposit(sc);
+                case 4 -> performWithdraw(sc);
+                case 5 -> checkBalance(sc);
+                case 6 -> System.out.println("Thank you for banking with us. Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 6);
+
+        sc.close();
+    }
+
+    static void createAccount(Scanner sc) {
+        if (accountCount >= MAX_ACCOUNTS) {
+            System.out.println("Cannot create more accounts. Limit reached.");
+            return;
+        }
+
+        System.out.print("Enter account holder name: ");
+        String name = sc.nextLine();
+
+        String accountNumber = "ACC" + (1000 + accountCount + 1); // simple auto-generated number
+
+        System.out.print("Enter initial deposit amount: Rs. ");
+        double initialBalance = sc.nextDouble();
+
+        if (initialBalance < 0) {
+            System.out.println("Initial balance cannot be negative. Account not created.");
+            return;
+        }
+
+        accounts[accountCount] = new Account(name, accountNumber, initialBalance);
+        accountCount++;
+
+        System.out.println("Account created successfully! Your account number is " + accountNumber);
+    }
+
+    static void viewAllAccounts() {
+        if (accountCount == 0) {
+            System.out.println("No accounts found.");
+            return;
+        }
+
+        System.out.println("\n--- All Accounts ---");
+        for (int i = 0; i < accountCount; i++) {
+            accounts[i].displayInfo();
+        }
+    }
+
+    static Account findAccountByNumber(String accountNumber) {
+        for (int i = 0; i < accountCount; i++) {
+            if (accounts[i].getAccountNumber().equalsIgnoreCase(accountNumber)) {
+                return accounts[i];
+            }
+        }
+        return null;
+    }
+
+    static void performDeposit(Scanner sc) {
+        System.out.print("Enter account number: ");
+        String accNum = sc.nextLine();
+
+        Account account = findAccountByNumber(accNum);
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        System.out.print("Enter amount to deposit: Rs. ");
+        double amount = sc.nextDouble();
+        account.deposit(amount);
+    }
+
+    static void performWithdraw(Scanner sc) {
+        System.out.print("Enter account number: ");
+        String accNum = sc.nextLine();
+
+        Account account = findAccountByNumber(accNum);
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        System.out.print("Enter amount to withdraw: Rs. ");
+        double amount = sc.nextDouble();
+        account.withdraw(amount);
+    }
+
+    static void checkBalance(Scanner sc) {
+        System.out.print("Enter account number: ");
+        String accNum = sc.nextLine();
+
+        Account account = findAccountByNumber(accNum);
+        if (account == null) {
+            System.out.println("Account not found!");
+            return;
+        }
+
+        System.out.println("Current Balance: Rs. " + account.getBalance());
+    }
+}
