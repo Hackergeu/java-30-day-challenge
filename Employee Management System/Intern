@@ -1,0 +1,19 @@
+public class Intern extends Employee {
+
+    private static final double FIXED_STIPEND = 15000.0;
+
+    public Intern(String name, String employeeId) {
+        // baseSalary is irrelevant for interns, so we pass 0
+        super(name, employeeId, 0);
+    }
+
+    @Override
+    public double calculateSalary() {
+        return FIXED_STIPEND; // baseSalary is ignored entirely
+    }
+
+    @Override
+    public String getRole() {
+        return "Intern";
+    }
+}
