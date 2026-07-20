@@ -1,0 +1,19 @@
+public class Manager extends Employee {
+
+    private double bonus;
+
+    public Manager(String name, String employeeId, double baseSalary, double bonus) {
+        super(name, employeeId, baseSalary);
+        this.bonus = bonus;
+    }
+
+    @Override
+    public double calculateSalary() {
+        return baseSalary + bonus;
+    }
+
+    @Override
+    public String getRole() {
+        return "Manager";
+    }
+}
