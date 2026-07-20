@@ -1,0 +1,20 @@
+public class Developer extends Employee {
+
+    private int overtimeHours;
+    private static final double OVERTIME_RATE_PER_HOUR = 500.0;
+
+    public Developer(String name, String employeeId, double baseSalary, int overtimeHours) {
+        super(name, employeeId, baseSalary);
+        this.overtimeHours = overtimeHours;
+    }
+
+    @Override
+    public double calculateSalary() {
+        return baseSalary + (overtimeHours * OVERTIME_RATE_PER_HOUR);
+    }
+
+    @Override
+    public String getRole() {
+        return "Developer";
+    }
+}
