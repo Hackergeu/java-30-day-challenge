@@ -1,0 +1,27 @@
+public class Employee {
+
+    protected String name;
+    protected String employeeId;
+    protected double baseSalary;
+
+    public Employee(String name, String employeeId, double baseSalary) {
+        this.name = name;
+        this.employeeId = employeeId;
+        this.baseSalary = baseSalary;
+    }
+
+    // Default salary calculation — subclasses override this with their own logic
+    public double calculateSalary() {
+        return baseSalary;
+    }
+
+    public void displayInfo() {
+        System.out.printf("ID: %-6s | Name: %-15s | Role: %-10s | Salary: Rs. %.2f%n",
+                employeeId, name, getRole(), calculateSalary());
+    }
+
+    // Subclasses override this to identify their type
+    public String getRole() {
+        return "Employee";
+    }
+}
