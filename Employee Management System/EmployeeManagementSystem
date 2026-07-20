@@ -1,0 +1,25 @@
+public class EmployeeManagementSystem {
+
+    public static void main(String[] args) {
+
+        // Employee[] array holding different subclass objects — this is polymorphism in action
+        Employee[] employees = new Employee[5];
+
+        employees[0] = new Manager("Amit Sharma", "M001", 60000, 15000);
+        employees[1] = new Developer("Priya Verma", "D001", 55000, 10);
+        employees[2] = new Developer("Rohan Gupta", "D002", 55000, 4);
+        employees[3] = new Intern("Sneha Iyer", "I001");
+        employees[4] = new Manager("Karan Mehta", "M002", 70000, 20000);
+
+        System.out.println("----- EMPLOYEE PAYROLL -----\n");
+
+        double totalPayroll = 0;
+
+        for (Employee emp : employees) {
+            emp.displayInfo();
+            totalPayroll += emp.calculateSalary();
+        }
+
+        System.out.printf("%nTotal Monthly Payroll: Rs. %.2f%n", totalPayroll);
+    }
+}
