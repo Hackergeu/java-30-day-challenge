@@ -1,0 +1,16 @@
+public abstract class Shape {
+
+    protected String shapeName;
+
+    public Shape(String shapeName) {
+        this.shapeName = shapeName;
+    }
+
+    // Abstract method — no body here; every subclass MUST implement this
+    public abstract double calculateArea();
+
+    // Normal (concrete) method — shared by all shapes, uses calculateArea() internally
+    public void displayArea() {
+        System.out.printf("%-10s Area: %.2f%n", shapeName, calculateArea());
+    }
+}
