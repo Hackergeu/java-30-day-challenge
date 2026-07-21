@@ -1,0 +1,24 @@
+public class ShapeAreaCalculator {
+
+    public static void main(String[] args) {
+
+        // Shape[] array holding different subclass objects — polymorphism again,
+        // but this time the parent class itself cannot be instantiated directly
+        Shape[] shapes = new Shape[3];
+
+        shapes[0] = new Circle(5);
+        shapes[1] = new Rectangle(4, 6);
+        shapes[2] = new Triangle(8, 3);
+
+        System.out.println("----- SHAPE AREA REPORT -----\n");
+
+        double totalArea = 0;
+
+        for (Shape shape : shapes) {
+            shape.displayArea();
+            totalArea += shape.calculateArea();
+        }
+
+        System.out.printf("%nTotal Combined Area: %.2f%n", totalArea);
+    }
+}
