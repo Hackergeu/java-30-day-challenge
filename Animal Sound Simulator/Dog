@@ -1,0 +1,14 @@
+// A class can implement MULTIPLE interfaces, separated by commas —
+// something a class cannot do with "extends" (which only allows one parent class).
+public class Dog implements Animal, Pet {
+
+    @Override
+    public void makeSound() {
+        System.out.println("Dog says: Woof Woof!");
+    }
+
+    @Override
+    public void play() {
+        System.out.println("Dog is playing fetch!");
+    }
+}
