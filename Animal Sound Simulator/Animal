@@ -1,0 +1,4 @@
+public interface Animal {
+    // No body — every method in an interface is implicitly public and abstract
+    void makeSound();
+}
