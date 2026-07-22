@@ -1,0 +1,25 @@
+public class AnimalSoundSimulator {
+
+    public static void main(String[] args) {
+
+        // Animal[] array holding different classes that all implement the Animal interface
+        Animal[] animals = new Animal[4];
+
+        animals[0] = new Dog();
+        animals[1] = new Cat();
+        animals[2] = new Cow();
+        animals[3] = new Bird();
+
+        System.out.println("----- ANIMAL SOUNDS -----\n");
+
+        for (Animal animal : animals) {
+            animal.makeSound();
+        }
+
+        // Demonstrating that Dog implements TWO interfaces (Animal and Pet)
+        System.out.println("\n----- EXTRA: Dog also implements Pet -----");
+        Dog myDog = new Dog();
+        myDog.makeSound(); // from Animal interface
+        myDog.play();      // from Pet interface
+    }
+}
