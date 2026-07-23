@@ -32,7 +32,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 | 11 | Employee Management System | Inheritance, method overriding | ✅ |
 | 12 | Shape Area Calculator | Abstraction, abstract classes | ✅ |
 | 13 | Animal Sound Simulator | Interfaces, polymorphism | ✅ |
-| 14 | Vehicle Rental System | Interfaces + inheritance combined | 🔲 |
+| 14 | Vehicle Rental System | Interfaces + inheritance combined | ✅ |
 | 15 | Contact Book App | Encapsulation + ArrayList basics | 🔲 |
 
 ### Phase 3: Collections & Exception Handling (Day 16–21)
