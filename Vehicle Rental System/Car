@@ -1,0 +1,31 @@
+public class Car extends Vehicle implements Rentable {
+
+    public Car(String model, double rentPerDay) {
+        super(model, rentPerDay);
+    }
+
+    @Override
+    public double calculateRent(int days) {
+        return rentPerDay * days;
+    }
+
+    @Override
+    public void rentVehicle() {
+        if (isRented) {
+            System.out.println(model + " is already rented!");
+            return;
+        }
+        isRented = true;
+        System.out.println(model + " has been rented.");
+    }
+
+    @Override
+    public void returnVehicle() {
+        if (!isRented) {
+            System.out.println(model + " was not rented.");
+            return;
+        }
+        isRented = false;
+        System.out.println(model + " has been returned.");
+    }
+}
