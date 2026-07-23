@@ -1,0 +1,93 @@
+import java.util.Scanner;
+
+public class VehicleRentalSystem {
+
+    static Vehicle[] vehicles = {
+        new Car("Honda City", 1500),
+        new Car("Toyota Innova", 2000),
+        new Bike("Royal Enfield", 700),
+        new Bike("Activa", 400),
+        new Truck("Tata Ace", 3000)
+    };
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        System.out.println("Welcome to the Vehicle Rental System!");
+
+        do {
+            System.out.println("\n----- RENTAL MENU -----");
+            System.out.println("1. View All Vehicles");
+            System.out.println("2. Rent a Vehicle");
+            System.out.println("3. Return a Vehicle");
+            System.out.println("4. Calculate Rent for a Vehicle");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> viewAllVehicles();
+
+                case 2 -> {
+                    viewAllVehicles();
+                    System.out.print("Enter vehicle number to rent: ");
+                    int rentIndex = sc.nextInt() - 1;
+                    if (isValidIndex(rentIndex)) {
+                        // Since Vehicle itself doesn't declare rentVehicle(),
+                        // we treat it as Rentable to call the interface method
+                        Rentable rentable = (Rentable) vehicles[rentIndex];
+                        rentable.rentVehicle();
+                    } else {
+                        System.out.println("Invalid vehicle number!");
+                    }
+                }
+
+                case 3 -> {
+                    viewAllVehicles();
+                    System.out.print("Enter vehicle number to return: ");
+                    int returnIndex = sc.nextInt() - 1;
+                    if (isValidIndex(returnIndex)) {
+                        Rentable rentable = (Rentable) vehicles[returnIndex];
+                        rentable.returnVehicle();
+                    } else {
+                        System.out.println("Invalid vehicle number!");
+                    }
+                }
+
+                case 4 -> {
+                    viewAllVehicles();
+                    System.out.print("Enter vehicle number: ");
+                    int calcIndex = sc.nextInt() - 1;
+                    if (isValidIndex(calcIndex)) {
+                        System.out.print("Enter number of days: ");
+                        int days = sc.nextInt();
+                        double rent = vehicles[calcIndex].calculateRent(days);
+                        System.out.printf("Total rent for %d days: Rs. %.2f%n", days, rent);
+                    } else {
+                        System.out.println("Invalid vehicle number!");
+                    }
+                }
+
+                case 5 -> System.out.println("Thank you for using the Vehicle Rental System!");
+
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+
+    static void viewAllVehicles() {
+        System.out.println("\n--- Available Vehicles ---");
+        for (int i = 0; i < vehicles.length; i++) {
+            System.out.print((i + 1) + ". ");
+            vehicles[i].displayInfo();
+        }
+    }
+
+    static boolean isValidIndex(int index) {
+        return index >= 0 && index < vehicles.length;
+    }
+}
