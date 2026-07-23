@@ -1,0 +1,28 @@
+public abstract class Vehicle {
+
+    protected String model;
+    protected double rentPerDay;
+    protected boolean isRented;
+
+    public Vehicle(String model, double rentPerDay) {
+        this.model = model;
+        this.rentPerDay = rentPerDay;
+        this.isRented = false;
+    }
+
+    // Abstract — each vehicle type calculates rent differently
+    public abstract double calculateRent(int days);
+
+    public void displayInfo() {
+        String status = isRented ? "Rented" : "Available";
+        System.out.printf("%-10s | Rent/day: Rs. %-8.2f | Status: %s%n", model, rentPerDay, status);
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public boolean isRented() {
+        return isRented;
+    }
+}
