@@ -1,0 +1,34 @@
+public class Truck extends Vehicle implements Rentable {
+
+    private static final double HEAVY_VEHICLE_SURCHARGE = 500.0;
+
+    public Truck(String model, double rentPerDay) {
+        super(model, rentPerDay);
+    }
+
+    @Override
+    public double calculateRent(int days) {
+        // Trucks have a flat surcharge added on top of the regular per-day rent
+        return (rentPerDay * days) + HEAVY_VEHICLE_SURCHARGE;
+    }
+
+    @Override
+    public void rentVehicle() {
+        if (isRented) {
+            System.out.println(model + " is already rented!");
+            return;
+        }
+        isRented = true;
+        System.out.println(model + " has been rented.");
+    }
+
+    @Override
+    public void returnVehicle() {
+        if (!isRented) {
+            System.out.println(model + " was not rented.");
+            return;
+        }
+        isRented = false;
+        System.out.println(model + " has been returned.");
+    }
+}
