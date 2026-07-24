@@ -1,0 +1,130 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ContactBook {
+
+    static ArrayList<Contact> contacts = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to your Contact Book!");
+
+        do {
+            System.out.println("\n----- CONTACT BOOK MENU -----");
+            System.out.println("1. Add Contact");
+            System.out.println("2. View All Contacts");
+            System.out.println("3. Search Contact by Name");
+            System.out.println("4. Update Contact");
+            System.out.println("5. Delete Contact");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume leftover newline
+
+            switch (choice) {
+                case 1 -> addContact();
+                case 2 -> viewAllContacts();
+                case 3 -> searchContact();
+                case 4 -> updateContact();
+                case 5 -> deleteContact();
+                case 6 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 6);
+
+        sc.close();
+    }
+
+    static void addContact() {
+        System.out.print("Enter name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter phone number: ");
+        String phone = sc.nextLine();
+
+        contacts.add(new Contact(name, phone));
+        System.out.println("Contact added successfully!");
+    }
+
+    static void viewAllContacts() {
+        if (contacts.isEmpty()) {
+            System.out.println("Contact book is empty.");
+            return;
+        }
+
+        System.out.println("\n--- All Contacts ---");
+        for (int i = 0; i < contacts.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            contacts.get(i).displayContact();
+        }
+    }
+
+    static void searchContact() {
+        if (contacts.isEmpty()) {
+            System.out.println("Contact book is empty.");
+            return;
+        }
+
+        System.out.print("Enter name to search: ");
+        String searchName = sc.nextLine();
+
+        boolean found = false;
+        for (Contact contact : contacts) {
+            if (contact.getName().equalsIgnoreCase(searchName)) {
+                contact.displayContact();
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No contact found with that name.");
+        }
+    }
+
+    static void updateContact() {
+        if (contacts.isEmpty()) {
+            System.out.println("Contact book is empty.");
+            return;
+        }
+
+        viewAllContacts();
+        System.out.print("Enter the S.No. of the contact to update (from the list above): ");
+        int index = sc.nextInt() - 1;
+        sc.nextLine(); // consume leftover newline
+
+        if (index < 0 || index >= contacts.size()) {
+            System.out.println("Invalid S.No.!");
+            return;
+        }
+
+        Contact contact = contacts.get(index);
+        System.out.println("Current phone number: " + contact.getPhoneNumber());
+        System.out.print("Enter new phone number: ");
+        String newPhone = sc.nextLine();
+
+        contact.setPhoneNumber(newPhone); 
+        System.out.println("Phone number updated successfully!");
+    }
+
+    static void deleteContact() {
+        if (contacts.isEmpty()) {
+            System.out.println("Contact book is empty.");
+            return;
+        }
+
+        viewAllContacts();
+        System.out.print("Enter the S.No. of the contact to delete (from the list above): ");
+        int index = sc.nextInt() - 1;
+
+        if (index < 0 || index >= contacts.size()) {
+            System.out.println("Invalid S.No.!");
+            return;
+        }
+
+        Contact removed = contacts.remove(index);
+        System.out.println("Deleted contact: " + removed.getName());
+    }
+}
