@@ -1,0 +1,120 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class InventoryManagementSystem {
+
+    static HashMap<String, Integer> inventory = new HashMap<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to the Inventory Management System!");
+
+        do {
+            System.out.println("\n----- INVENTORY MENU -----");
+            System.out.println("1. Add Product");
+            System.out.println("2. View Inventory");
+            System.out.println("3. Update Stock");
+            System.out.println("4. Remove Product");
+            System.out.println("5. Search Product");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume leftover newline
+
+            switch (choice) {
+                case 1 -> addProduct();
+                case 2 -> viewInventory();
+                case 3 -> updateStock();
+                case 4 -> removeProduct();
+                case 5 -> searchProduct();
+                case 6 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 6);
+
+        sc.close();
+    }
+
+    static void addProduct() {
+        System.out.print("Enter product name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter quantity: ");
+        int quantity = sc.nextInt();
+
+        if (quantity < 0) {
+            System.out.println("Quantity cannot be negative.");
+            return;
+        }
+
+        if (inventory.containsKey(name)) {
+            // Product already exists — add to the existing quantity instead of overwriting
+            int updatedQty = inventory.get(name) + quantity;
+            inventory.put(name, updatedQty);
+            System.out.println(name + " already existed. Updated quantity to " + updatedQty + ".");
+        } else {
+            inventory.put(name, quantity);
+            System.out.println(name + " added to inventory with quantity " + quantity + ".");
+        }
+    }
+
+    static void viewInventory() {
+        if (inventory.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+
+        System.out.println("\n--- Current Inventory ---");
+        for (String product : inventory.keySet()) {
+            System.out.println(product + " -> " + inventory.get(product) + " units");
+        }
+    }
+
+    static void updateStock() {
+        System.out.print("Enter product name: ");
+        String name = sc.nextLine();
+
+        if (!inventory.containsKey(name)) {
+            System.out.println("Product not found in inventory!");
+            return;
+        }
+
+        System.out.print("Enter new quantity: ");
+        int newQty = sc.nextInt();
+
+        if (newQty < 0) {
+            System.out.println("Quantity cannot be negative.");
+            return;
+        }
+
+        inventory.put(name, newQty); // put() overwrites the value for an existing key
+        System.out.println(name + " stock updated to " + newQty + ".");
+    }
+
+    static void removeProduct() {
+        System.out.print("Enter product name to remove: ");
+        String name = sc.nextLine();
+
+        if (!inventory.containsKey(name)) {
+            System.out.println("Product not found in inventory!");
+            return;
+        }
+
+        inventory.remove(name);
+        System.out.println(name + " removed from inventory.");
+    }
+
+    static void searchProduct() {
+        System.out.print("Enter product name to search: ");
+        String name = sc.nextLine();
+
+        if (inventory.containsKey(name)) {
+            System.out.println(name + " -> " + inventory.get(name) + " units available.");
+        } else {
+            System.out.println(name + " not found in inventory.");
+        }
+    }
+}
