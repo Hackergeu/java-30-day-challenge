@@ -38,7 +38,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 ### Phase 3: Collections & Exception Handling (Day 16–21)
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
-| 16 | Inventory Management System | ArrayList, HashMap | 🔲 |
+| 16 | Inventory Management System | ArrayList, HashMap | ✅ |
 | 17 | Student Result Portal | HashMap (roll-no → marks) | 🔲 |
 | 18 | Custom Exception Handling – Withdrawal System | Custom exceptions, try-catch-finally | 🔲 |
 | 19 | Movie Ticket Booking (console) | HashSet, avoiding duplicates | 🔲 |
