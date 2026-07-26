@@ -1,0 +1,146 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class StudentResultPortal {
+
+    static HashMap<Integer, Double> results = new HashMap<>(); // rollNo -> marks (out of 100)
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to the Student Result Portal!");
+
+        do {
+            System.out.println("\n----- RESULT PORTAL MENU -----");
+            System.out.println("1. Add Result");
+            System.out.println("2. View All Results");
+            System.out.println("3. Search by Roll Number");
+            System.out.println("4. Class Average");
+            System.out.println("5. Highest Scorer");
+            System.out.println("6. Lowest Scorer");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> addResult();
+                case 2 -> viewAllResults();
+                case 3 -> searchByRollNumber();
+                case 4 -> classAverage();
+                case 5 -> findTopper();
+                case 6 -> findLowestScorer();
+                case 7 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 7);
+
+        sc.close();
+    }
+
+    static void addResult() {
+        System.out.print("Enter roll number: ");
+        int rollNo = sc.nextInt();
+
+        System.out.print("Enter marks (out of 100): ");
+        double marks = sc.nextDouble();
+
+        if (marks < 0 || marks > 100) {
+            System.out.println("Marks must be between 0 and 100.");
+            return;
+        }
+
+        if (results.containsKey(rollNo)) {
+            System.out.println("Roll number already exists. Overwriting previous marks.");
+        }
+
+        results.put(rollNo, marks);
+        System.out.println("Result added for Roll No. " + rollNo);
+    }
+
+    static void viewAllResults() {
+        if (results.isEmpty()) {
+            System.out.println("No results available.");
+            return;
+        }
+
+        System.out.println("\n--- All Results ---");
+        // Map.Entry lets us access both the key (rollNo) and value (marks) together in one loop
+        for (Map.Entry<Integer, Double> entry : results.entrySet()) {
+            int rollNo = entry.getKey();
+            double marks = entry.getValue();
+            String status = marks >= 40 ? "Pass" : "Fail";
+            System.out.println("Roll No. " + rollNo + " -> Marks: " + marks + " (" + status + ")");
+        }
+    }
+
+    static void searchByRollNumber() {
+        System.out.print("Enter roll number to search: ");
+        int rollNo = sc.nextInt();
+
+        if (!results.containsKey(rollNo)) {
+            System.out.println("Roll No. " + rollNo + " not found.");
+            return;
+        }
+
+        double marks = results.get(rollNo);
+        String status = marks >= 40 ? "Pass" : "Fail";
+        System.out.println("Roll No. " + rollNo + " -> Marks: " + marks + " (" + status + ")");
+    }
+
+    static void classAverage() {
+        if (results.isEmpty()) {
+            System.out.println("No results available.");
+            return;
+        }
+
+        double total = 0;
+        for (double marks : results.values()) {
+            total += marks;
+        }
+
+        double average = total / results.size();
+        System.out.printf("Class Average: %.2f%n", average);
+    }
+
+    static void findTopper() {
+        if (results.isEmpty()) {
+            System.out.println("No results available.");
+            return;
+        }
+
+        int topperRollNo = -1;
+        double highestMarks = -1;
+
+        // Looping through entrySet() so we can track BOTH the roll number and marks together
+        for (Map.Entry<Integer, Double> entry : results.entrySet()) {
+            if (entry.getValue() > highestMarks) {
+                highestMarks = entry.getValue();
+                topperRollNo = entry.getKey();
+            }
+        }
+
+        System.out.println("Topper: Roll No. " + topperRollNo + " with " + highestMarks + " marks.");
+    }
+
+    static void findLowestScorer() {
+        if (results.isEmpty()) {
+            System.out.println("No results available.");
+            return;
+        }
+
+        int lowestRollNo = -1;
+        double lowestMarks = 101; // starts above the max possible (100), so first entry always replaces it
+
+        for (Map.Entry<Integer, Double> entry : results.entrySet()) {
+            if (entry.getValue() < lowestMarks) {
+                lowestMarks = entry.getValue();
+                lowestRollNo = entry.getKey();
+            }
+        }
+
+        System.out.println("Lowest Scorer: Roll No. " + lowestRollNo + " with " + lowestMarks + " marks.");
+    }
+}
