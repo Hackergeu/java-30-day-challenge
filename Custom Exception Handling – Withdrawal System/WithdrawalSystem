@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+public class WithdrawalSystem {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Account account = new Account("Vansh Agarwal", 5000.0);
+        char choice;
+
+        System.out.println("Welcome to the Withdrawal System!");
+        System.out.println("Account Holder: " + account.getAccountHolderName());
+
+        do {
+            System.out.printf("%nCurrent Balance: Rs. %.2f%n", account.getBalance());
+            System.out.print("Enter amount to withdraw: Rs. ");
+            double amount = sc.nextDouble();
+
+            try {
+                account.withdraw(amount);
+                System.out.println("Withdrawal successful!");
+
+            } catch (InsufficientBalanceException | InvalidAmountException e) {
+                System.out.println("Transaction Failed: " + e.getMessage());
+
+            } finally {
+                // This runs no matter what — success, insufficient balance, or invalid amount
+                System.out.println("Transaction attempt completed at " + java.time.LocalTime.now().withNano(0));
+            }
+
+            System.out.print("\nDo you want to try another transaction? (Y/N): ");
+            choice = sc.next().charAt(0);
+
+        } while (choice == 'Y' || choice == 'y');
+
+        System.out.printf("%nFinal Balance: Rs. %.2f%n", account.getBalance());
+        System.out.println("Thank you for using the Withdrawal System!");
+
+        sc.close();
+    }
+}
