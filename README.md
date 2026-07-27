@@ -40,7 +40,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 |-----|---------|----------|--------|
 | 16 | Inventory Management System | ArrayList, HashMap | ✅ |
 | 17 | Student Result Portal | HashMap (roll-no → marks) | ✅ |
-| 18 | Custom Exception Handling – Withdrawal System | Custom exceptions, try-catch-finally | 🔲 |
+| 18 | Custom Exception Handling – Withdrawal System | Custom exceptions, try-catch-finally | ✅ |
 | 19 | Movie Ticket Booking (console) | HashSet, avoiding duplicates | 🔲 |
 | 20 | Employee Payroll System | TreeMap, Comparator | 🔲 |
 | 21 | Word Frequency Counter | HashMap, String manipulation | 🔲 |
