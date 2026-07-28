@@ -1,0 +1,98 @@
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class MovieTicketBooking {
+
+    static final int TOTAL_SEATS = 20;
+    static HashSet<Integer> bookedSeats = new HashSet<>();
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to the Movie Ticket Booking System!");
+        System.out.println("Total Seats Available: " + TOTAL_SEATS);
+
+        do {
+            System.out.println("\n----- BOOKING MENU -----");
+            System.out.println("1. Book a Seat");
+            System.out.println("2. View Booked Seats");
+            System.out.println("3. View Available Seats");
+            System.out.println("4. Cancel Booking");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> bookSeat();
+                case 2 -> viewBookedSeats();
+                case 3 -> viewAvailableSeats();
+                case 4 -> cancelBooking();
+                case 5 -> System.out.println("Thank you for using the Movie Ticket Booking System!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+
+    static void bookSeat() {
+        System.out.print("Enter seat number to book (1-" + TOTAL_SEATS + "): ");
+        int seatNo = sc.nextInt();
+
+        if (seatNo < 1 || seatNo > TOTAL_SEATS) {
+            System.out.println("Invalid seat number! Please choose between 1 and " + TOTAL_SEATS + ".");
+            return;
+        }
+
+        boolean added = bookedSeats.add(seatNo);
+
+        if (added) {
+            System.out.println("Seat " + seatNo + " booked successfully!");
+        } else {
+            System.out.println("Seat " + seatNo + " is already booked! Please choose another seat.");
+        }
+    }
+
+    static void viewBookedSeats() {
+        if (bookedSeats.isEmpty()) {
+            System.out.println("No seats booked yet.");
+            return;
+        }
+
+        System.out.println("\n--- Booked Seats ---");
+        System.out.println(bookedSeats);
+    }
+
+    static void viewAvailableSeats() {
+        System.out.println("\n--- Available Seats ---");
+        boolean anyAvailable = false;
+
+        for (int seat = 1; seat <= TOTAL_SEATS; seat++) {
+            if (!bookedSeats.contains(seat)) {
+                System.out.print(seat + " ");
+                anyAvailable = true;
+            }
+        }
+
+        if (!anyAvailable) {
+            System.out.println("No seats available. Show is fully booked!");
+        } else {
+            System.out.println(); // newline after listing seats
+        }
+    }
+
+    static void cancelBooking() {
+        System.out.print("Enter seat number to cancel: ");
+        int seatNo = sc.nextInt();
+
+        boolean removed = bookedSeats.remove(seatNo);
+
+        if (removed) {
+            System.out.println("Booking for seat " + seatNo + " has been cancelled.");
+        } else {
+            System.out.println("Seat " + seatNo + " was not booked.");
+        }
+    }
+}
