@@ -1,0 +1,116 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class EmployeePayrollSystem {
+
+    static TreeMap<String, Double> payroll = new TreeMap<>(); // name -> salary, auto-sorted by name
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to the Employee Payroll System!");
+
+        do {
+            System.out.println("\n----- PAYROLL MENU -----");
+            System.out.println("1. Add Employee");
+            System.out.println("2. View Payroll (Sorted by Name)");
+            System.out.println("3. View Payroll (Sorted by Salary - Highest First)");
+            System.out.println("4. View Payroll (Sorted by Salary - Lowest First)");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume leftover newline
+
+            switch (choice) {
+                case 1 -> addEmployee();
+                case 2 -> viewSortedByName();
+                case 3 -> viewSortedBySalaryDescending();
+                case 4 -> viewSortedBySalaryAscending();
+                case 5 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+
+    static void addEmployee() {
+        System.out.print("Enter employee name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter salary: Rs. ");
+        double salary = sc.nextDouble();
+
+        if (salary < 0) {
+            System.out.println("Salary cannot be negative.");
+            return;
+        }
+
+        payroll.put(name, salary);
+        System.out.println(name + " added to payroll with salary Rs. " + salary);
+    }
+
+    static void viewSortedByName() {
+        if (payroll.isEmpty()) {
+            System.out.println("Payroll is empty.");
+            return;
+        }
+
+        System.out.println("\n--- Payroll (Sorted by Name) ---");
+        for (Map.Entry<String, Double> entry : payroll.entrySet()) {
+            System.out.printf("%-15s Rs. %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    static void viewSortedBySalaryDescending() {
+        if (payroll.isEmpty()) {
+            System.out.println("Payroll is empty.");
+            return;
+        }
+
+        // Copy entries into a List, since TreeMap itself can't be re-sorted by value
+        List<Map.Entry<String, Double>> entryList = new ArrayList<>(payroll.entrySet());
+
+        // Comparator: compare by value (salary), reversed for descending order
+        entryList.sort(new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
+                return Double.compare(e2.getValue(), e1.getValue()); // e2 vs e1 = descending
+            }
+        });
+
+        System.out.println("\n--- Payroll (Sorted by Salary - Highest First) ---");
+        for (Map.Entry<String, Double> entry : entryList) {
+            System.out.printf("%-15s Rs. %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+
+    static void viewSortedBySalaryAscending() {
+        if (payroll.isEmpty()) {
+            System.out.println("Payroll is empty.");
+            return;
+        }
+
+        List<Map.Entry<String, Double>> entryList = new ArrayList<>(payroll.entrySet());
+
+        // Comparator: compare by value (salary), natural order for ascending
+        entryList.sort(new Comparator<Map.Entry<String, Double>>() {
+            @Override
+            public int compare(Map.Entry<String, Double> e1, Map.Entry<String, Double> e2) {
+                return Double.compare(e1.getValue(), e2.getValue()); // e1 vs e2 = ascending
+            }
+        });
+
+        System.out.println("\n--- Payroll (Sorted by Salary - Lowest First) ---");
+        for (Map.Entry<String, Double> entry : entryList) {
+            System.out.printf("%-15s Rs. %.2f%n", entry.getKey(), entry.getValue());
+        }
+    }
+}
