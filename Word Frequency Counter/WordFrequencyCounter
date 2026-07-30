@@ -1,0 +1,58 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class WordFrequencyCounter {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter a sentence or paragraph: ");
+        String text = sc.nextLine();
+
+        if (text.trim().isEmpty()) {
+            System.out.println("You entered an empty string. Nothing to count.");
+            sc.close();
+            return;
+        }
+
+        // Step 1: Clean the text — lowercase, remove punctuation
+        String cleanedText = text.toLowerCase().replaceAll("[^a-z0-9\\s]", "");
+
+        // Step 2: Split into words (one or more spaces as the delimiter)
+        String[] words = cleanedText.trim().split("\\s+");
+
+        // Step 3: Count frequency using HashMap
+        HashMap<String, Integer> frequency = new HashMap<>();
+
+        for (String word : words) {
+            // getOrDefault(word, 0) returns the current count, or 0 if the word isn't in the map yet
+            frequency.put(word, frequency.getOrDefault(word, 0) + 1);
+        }
+
+        // Step 4: Display results
+        System.out.println("\n--- Word Frequency ---");
+        System.out.println("Total words: " + words.length);
+        System.out.println("Unique words: " + frequency.size());
+        System.out.println();
+
+        for (Map.Entry<String, Integer> entry : frequency.entrySet()) {
+            System.out.printf("%-15s -> %d%n", entry.getKey(), entry.getValue());
+        }
+
+        // Bonus: find the most frequent word
+        String mostFrequentWord = null;
+        int maxCount = 0;
+
+        for (Map.Entry<String, Integer> entry : frequency.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                mostFrequentWord = entry.getKey();
+            }
+        }
+
+        System.out.println("\nMost frequent word: \"" + mostFrequentWord + "\" (" + maxCount + " times)");
+
+        sc.close();
+    }
+}
