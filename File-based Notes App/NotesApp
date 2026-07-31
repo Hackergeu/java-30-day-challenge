@@ -1,0 +1,73 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class NotesApp {
+
+    static final String FILE_NAME = "notes.txt";
+    static Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("Welcome to the File-based Notes App!");
+
+        do {
+            System.out.println("\n----- NOTES MENU -----");
+            System.out.println("1. Add Note");
+            System.out.println("2. View All Notes");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume leftover newline
+
+            switch (choice) {
+                case 1 -> addNote();
+                case 2 -> viewAllNotes();
+                case 3 -> System.out.println("Goodbye! Your notes are saved in " + FILE_NAME);
+                default -> System.out.println("Invalid choice! Please select a valid option.");
+            }
+
+        } while (choice != 3);
+
+        sc.close();
+    }
+
+    static void addNote() {
+        System.out.print("Enter your note: ");
+        String note = sc.nextLine();
+
+        // "true" enables append mode — new notes are added to the end, not overwriting old ones
+        try (FileWriter writer = new FileWriter(FILE_NAME, true)) {
+            writer.write(note + System.lineSeparator());
+            System.out.println("Note saved successfully!");
+        } catch (IOException e) {
+            System.out.println("Error saving note: " + e.getMessage());
+        }
+    }
+
+    static void viewAllNotes() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            int noteNumber = 1;
+            boolean hasNotes = false;
+
+            System.out.println("\n--- Your Notes ---");
+            while ((line = reader.readLine()) != null) {
+                System.out.println(noteNumber + ". " + line);
+                noteNumber++;
+                hasNotes = true;
+            }
+
+            if (!hasNotes) {
+                System.out.println("No notes yet. The file exists but is empty.");
+            }
+
+        } catch (IOException e) {
+            // This runs if the file doesn't exist yet — i.e., no note has ever been added
+            System.out.println("No notes found yet. Add a note first!");
+        }
+    }
+}
