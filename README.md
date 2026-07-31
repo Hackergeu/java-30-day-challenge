@@ -48,7 +48,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 ### Phase 4: File I/O, Swing Basics & Games (Day 22–26)
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
-| 22 | File-based Notes App | FileReader/FileWriter, BufferedReader | 🔲 |
+| 22 | File-based Notes App | FileReader/FileWriter, BufferedReader | ✅ |
 | 23 | CSV Parser (basic) | File I/O + String split/parsing | 🔲 |
 | 24 | Snake Game | Java Swing, basic GUI + game loop | 🔲 |
 | 25 | Memory Card Matching Game | Swing, 2D grid | 🔲 |
