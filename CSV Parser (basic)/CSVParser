@@ -1,0 +1,84 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
+
+public class CSVParser {
+
+    static final String FILE_NAME = "students.csv";
+
+    public static void main(String[] args) {
+
+        createSampleFileIfMissing();
+        parseAndDisplayCSV();
+    }
+
+    static void createSampleFileIfMissing() {
+        File file = new File(FILE_NAME);
+
+        if (file.exists()) {
+            return; // don't overwrite existing data
+        }
+
+        try (FileWriter writer = new FileWriter(FILE_NAME)) {
+            writer.write("Name,Age,Marks" + System.lineSeparator());
+            writer.write("Rahul,22,85" + System.lineSeparator());
+            writer.write("Priya,21,92" + System.lineSeparator());
+            writer.write("Amit,23,78" + System.lineSeparator());
+            writer.write("Sneha,20,88" + System.lineSeparator());
+            System.out.println("Sample CSV file created: " + FILE_NAME);
+        } catch (IOException e) {
+            System.out.println("Error creating sample file: " + e.getMessage());
+        }
+    }
+
+    static void parseAndDisplayCSV() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            boolean isFirstLine = true;
+            String[] headers = null;
+            int rowNumber = 0;
+
+            while ((line = reader.readLine()) != null) {
+                String[] columns = line.split(",");
+
+                if (isFirstLine) {
+                    headers = columns;
+                    printRow(headers);
+                    printSeparator(headers.length);
+                    isFirstLine = false;
+                    continue;
+                }
+
+                rowNumber++;
+
+                // Guard against malformed rows (missing columns)
+                if (columns.length != headers.length) {
+                    System.out.println("Skipping malformed row " + rowNumber +
+                            " (expected " + headers.length + " columns, found " + columns.length + "): " + line);
+                    continue;
+                }
+
+                printRow(columns);
+            }
+
+            System.out.println("\nTotal valid data rows: " + rowNumber);
+
+        } catch (IOException e) {
+            System.out.println("Error reading CSV file: " + e.getMessage());
+        }
+    }
+
+    static void printRow(String[] columns) {
+        StringBuilder rowText = new StringBuilder();
+        for (String column : columns) {
+            rowText.append(String.format("%-10s", column));
+        }
+        System.out.println(rowText.toString());
+    }
+
+    static void printSeparator(int columnCount) {
+        System.out.println("-".repeat(columnCount * 10));
+    }
+}
