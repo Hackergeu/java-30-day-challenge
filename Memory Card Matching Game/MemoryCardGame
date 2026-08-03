@@ -1,0 +1,128 @@
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.*;
+
+public class MemoryCardGame extends JFrame {
+
+    static final int ROWS = 4;
+    static final int COLS = 4;
+    static final int TOTAL_CARDS = ROWS * COLS;
+
+    JButton[] buttons = new JButton[TOTAL_CARDS];
+    int[] cardValues = new int[TOTAL_CARDS];
+    boolean[] isMatched = new boolean[TOTAL_CARDS];
+
+    int firstPick = -1;   // index of the first card clicked in the current turn, -1 = none yet
+    int secondPick = -1;  // index of the second card clicked
+    int matchesFound = 0;
+    boolean waiting = false; // true while showing a mismatched pair, blocks further clicks
+
+    JLabel statusLabel;
+
+    public MemoryCardGame() {
+        this.setTitle("Memory Card Matching Game");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());
+
+        statusLabel = new JLabel("Find the matching pairs!", SwingConstants.CENTER);
+        statusLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        this.add(statusLabel, BorderLayout.NORTH);
+
+        JPanel gridPanel = new JPanel(new GridLayout(ROWS, COLS, 5, 5));
+        generateShuffledValues();
+
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+            JButton button = new JButton("?");
+            button.setFont(new Font("Arial", Font.BOLD, 24));
+            button.setPreferredSize(new Dimension(80, 80));
+
+            final int index = i; // must be effectively final to use inside the lambda below
+            button.addActionListener(e -> handleCardClick(index));
+
+            buttons[i] = button;
+            gridPanel.add(button);
+        }
+
+        this.add(gridPanel, BorderLayout.CENTER);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.setVisible(true);
+    }
+
+    void generateShuffledValues() {
+        // Create 8 pairs (1,1,2,2,3,3...8,8) for a 4x4 = 16 card grid
+        List<Integer> values = new ArrayList<>();
+        for (int i = 1; i <= TOTAL_CARDS / 2; i++) {
+            values.add(i);
+            values.add(i);
+        }
+        Collections.shuffle(values);
+
+        for (int i = 0; i < TOTAL_CARDS; i++) {
+            cardValues[i] = values.get(i);
+        }
+    }
+
+    void handleCardClick(int index) {
+        // Ignore clicks while waiting (showing mismatch), on already-matched cards,
+        // or on a card that's already flipped as the first pick
+        if (waiting || isMatched[index] || index == firstPick) {
+            return;
+        }
+
+        buttons[index].setText(String.valueOf(cardValues[index]));
+
+        if (firstPick == -1) {
+            // This is the first card of the turn
+            firstPick = index;
+            return;
+        }
+
+        // This is the second card of the turn
+        secondPick = index;
+
+        if (cardValues[firstPick] == cardValues[secondPick]) {
+            // Match found!
+            isMatched[firstPick] = true;
+            isMatched[secondPick] = true;
+            buttons[firstPick].setEnabled(false);
+            buttons[secondPick].setEnabled(false);
+            matchesFound++;
+
+            resetPicks();
+
+            if (matchesFound == TOTAL_CARDS / 2) {
+                statusLabel.setText("You Win! All pairs matched!");
+            } else {
+                statusLabel.setText("Matches found: " + matchesFound + " / " + (TOTAL_CARDS / 2));
+            }
+
+        } else {
+            // No match — briefly show both cards, then hide them again
+            waiting = true;
+            statusLabel.setText("No match, try again...");
+
+            Timer hideTimer = new Timer(800, e -> {
+                buttons[firstPick].setText("?");
+                buttons[secondPick].setText("?");
+                resetPicks();
+                waiting = false;
+                statusLabel.setText("Find the matching pairs!");
+            });
+            hideTimer.setRepeats(false); // only fire once, not repeatedly
+            hideTimer.start();
+        }
+    }
+
+    void resetPicks() {
+        firstPick = -1;
+        secondPick = -1;
+    }
+
+    public static void main(String[] args) {
+        new MemoryCardGame();
+    }
+}
