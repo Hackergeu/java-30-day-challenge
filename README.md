@@ -52,7 +52,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 | 23 | CSV Parser (basic) | File I/O + String split/parsing | ✅ |
 | 24 | Snake Game | Java Swing, basic GUI + game loop | ✅ |
 | 25 | Memory Card Matching Game | Swing, 2D grid | ✅ |
-| 26 | Log File Analyzer | File reading, regex basics | 🔲 |
+| 26 | Log File Analyzer | File reading, regex basics | ✅ |
 
 ### Phase 5: Multithreading & Networking (Day 27–29)
 | Day | Project | Concepts | Status |
