@@ -1,0 +1,98 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class LogFileAnalyzer {
+
+    static final String LOG_FILE_NAME = "app.log";
+
+    public static void main(String[] args) {
+
+        File logFile = new File(LOG_FILE_NAME);
+
+        // Step 1: Agar file exist nahi karti, toh sample log file generate karo
+        if (!logFile.exists()) {
+            System.out.println("Log file nahi mili. Sample log file generate kar raha hoon...\n");
+            generateSampleLogFile(logFile);
+        } else {
+            System.out.println("Existing log file mil gayi: " + logFile.getName() + "\n");
+        }
+
+        // Step 2: File padho, line by line
+        List<String> lines;
+        try {
+            lines = Files.readAllLines(logFile.toPath());
+        } catch (IOException e) {
+            System.out.println("File padhne mein error aaya: " + e.getMessage());
+            return;
+        }
+
+        // Step 3: Log level count karne ke liye HashMap
+        HashMap<String, Integer> levelCount = new HashMap<>();
+
+        // Timestamp extract karne ke liye regex pattern (format: 2024-01-15 10:23:45)
+        Pattern timestampPattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
+
+        System.out.println("=== ERROR Logs ===");
+
+        for (String line : lines) {
+
+            // Log level dhoondna: simple .contains() kaafi hai
+            String level = null;
+            if (line.contains("ERROR")) {
+                level = "ERROR";
+            } else if (line.contains("WARNING")) {
+                level = "WARNING";
+            } else if (line.contains("INFO")) {
+                level = "INFO";
+            }
+
+            if (level != null) {
+                levelCount.put(level, levelCount.getOrDefault(level, 0) + 1);
+            }
+
+            // Sirf ERROR logs filter karke dikhana, timestamp regex se nikaalna
+            if ("ERROR".equals(level)) {
+                Matcher matcher = timestampPattern.matcher(line);
+                String timestamp = matcher.find() ? matcher.group() : "Unknown time";
+                System.out.println("[" + timestamp + "] " + line);
+            }
+        }
+
+        // Step 4: Final summary
+        System.out.println("\n=== Log Level Summary ===");
+        for (String key : levelCount.keySet()) {
+            System.out.println(key + ": " + levelCount.get(key));
+        }
+    }
+
+    private static void generateSampleLogFile(File file) {
+        String[] sampleLines = {
+            "2024-01-15 10:23:45 INFO User logged in successfully",
+            "2024-01-15 10:24:12 ERROR Database connection failed",
+            "2024-01-15 10:24:15 WARNING Low memory detected",
+            "2024-01-15 10:25:00 INFO User logged out",
+            "2024-01-15 10:26:30 ERROR Null pointer exception",
+            "2024-01-15 10:27:10 INFO Scheduled backup started",
+            "2024-01-15 10:28:00 WARNING Disk space below 10%",
+            "2024-01-15 10:29:45 ERROR Timeout while calling payment API",
+            "2024-01-15 10:30:12 INFO Backup completed successfully",
+            "2024-01-15 10:31:05 WARNING High CPU usage detected"
+        };
+
+        try (FileWriter writer = new FileWriter(file)) {
+            for (String line : sampleLines) {
+                writer.write(line + System.lineSeparator());
+            }
+            System.out.println("Sample log file '" + file.getName() + "' ban gayi with "
+                    + sampleLines.length + " lines.");
+        } catch (IOException e) {
+            System.out.println("Sample file banane mein error: " + e.getMessage());
+        }
+    }
+}
