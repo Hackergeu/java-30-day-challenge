@@ -57,7 +57,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 ### Phase 5: Multithreading & Networking (Day 27–29)
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
-| 27 | Multi-threaded Counter | Thread, Runnable, race conditions | 🔲 |
+| 27 | Multi-threaded Counter | Thread, Runnable, race conditions | ✅ |
 | 28 | Producer-Consumer Problem | Synchronization, wait()/notify() | 🔲 |
 | 29 | Chat Application (console, multi-client) | Sockets, networking basics, threads | 🔲 |
 
