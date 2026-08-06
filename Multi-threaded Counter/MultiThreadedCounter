@@ -1,0 +1,75 @@
+public class MultiThreadedCounter {
+
+    // Shared counter WITHOUT synchronization — will show race condition
+    static int unsafeCounter = 0;
+
+    // Shared counter WITH synchronization — will always be correct
+    static int safeCounter = 0;
+
+    static final int NUM_THREADS = 4;
+    static final int INCREMENTS_PER_THREAD = 1000;
+
+    public static void main(String[] args) throws InterruptedException {
+
+        System.out.println("Expected final value: " + (NUM_THREADS * INCREMENTS_PER_THREAD));
+
+        // ---------- PART 1: WITHOUT synchronized (race condition) ----------
+        System.out.println("\n=== Without synchronized ===");
+        Thread[] unsafeThreads = new Thread[NUM_THREADS];
+
+        for (int i = 0; i < NUM_THREADS; i++) {
+            unsafeThreads[i] = new Thread(new UnsafeIncrementTask());
+            unsafeThreads[i].start();
+        }
+
+        // Wait for all threads to finish before reading the final value
+        for (Thread t : unsafeThreads) {
+            t.join();
+        }
+
+        System.out.println("Final unsafeCounter value: " + unsafeCounter);
+        System.out.println("(Run this a few times — this number will likely change each time!)");
+
+        // ---------- PART 2: WITH synchronized (correct) ----------
+        System.out.println("\n=== With synchronized ===");
+        Thread[] safeThreads = new Thread[NUM_THREADS];
+
+        for (int i = 0; i < NUM_THREADS; i++) {
+            safeThreads[i] = new Thread(new SafeIncrementTask());
+            safeThreads[i].start();
+        }
+
+        for (Thread t : safeThreads) {
+            t.join();
+        }
+
+        System.out.println("Final safeCounter value: " + safeCounter);
+        System.out.println("(This will always be correct, every single run.)");
+    }
+
+    // Task that increments the counter WITHOUT any protection
+    static class UnsafeIncrementTask implements Runnable {
+        @Override
+        public void run() {
+            for (int i = 0; i < INCREMENTS_PER_THREAD; i++) {
+                unsafeCounter++; // read -> add 1 -> write : NOT atomic
+            }
+        }
+    }
+
+    // Task that increments the counter WITH synchronized protection
+    static class SafeIncrementTask implements Runnable {
+        @Override
+        public void run() {
+            for (int i = 0; i < INCREMENTS_PER_THREAD; i++) {
+                increment();
+            }
+        }
+
+        // synchronized on the method -> only ONE thread can execute this
+        // block at a time (locks on the class, since this is a static method)
+        static synchronized void increment() {
+            safeCounter++;
+        }
+    }
+}
