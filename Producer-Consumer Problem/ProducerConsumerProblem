@@ -1,0 +1,97 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class ProducerConsumerProblem {
+
+    public static void main(String[] args) {
+        SharedBuffer buffer = new SharedBuffer(5); // buffer can hold up to 5 items
+
+        Thread producerThread = new Thread(new Producer(buffer), "Producer");
+        Thread consumerThread = new Thread(new Consumer(buffer), "Consumer");
+
+        producerThread.start();
+        consumerThread.start();
+    }
+}
+
+class SharedBuffer {
+
+    private final Queue<Integer> queue = new LinkedList<>();
+    private final int capacity;
+
+    public SharedBuffer(int capacity) {
+        this.capacity = capacity;
+    }
+
+    // synchronized ensures only one thread can execute this method at a time
+    public synchronized void produce(int value) throws InterruptedException {
+        // "while" (not "if") — after waking up, re-check the condition,
+        // since another thread might have changed the state in the meantime
+        while (queue.size() == capacity) {
+            System.out.println("Buffer full! Producer waiting...");
+            wait(); // releases the lock and pauses this thread until notified
+        }
+
+        queue.add(value);
+        System.out.println("Produced: " + value + " | Buffer size: " + queue.size());
+
+        notify(); // wake up a waiting Consumer thread, if any
+    }
+
+    public synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            System.out.println("Buffer empty! Consumer waiting...");
+            wait();
+        }
+
+        int value = queue.poll();
+        System.out.println("Consumed: " + value + " | Buffer size: " + queue.size());
+
+        notify(); // wake up a waiting Producer thread, if any
+        return value;
+    }
+}
+
+class Producer implements Runnable {
+
+    private final SharedBuffer buffer;
+
+    public Producer(SharedBuffer buffer) {
+        this.buffer = buffer;
+    }
+
+    @Override
+    public void run() {
+        int value = 1;
+        try {
+            while (true) {
+                buffer.produce(value);
+                value++;
+                Thread.sleep(300); // simulate time taken to "produce" an item
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Producer interrupted.");
+        }
+    }
+}
+
+class Consumer implements Runnable {
+
+    private final SharedBuffer buffer;
+
+    public Consumer(SharedBuffer buffer) {
+        this.buffer = buffer;
+    }
+
+    @Override
+    public void run() {
+        try {
+            while (true) {
+                buffer.consume();
+                Thread.sleep(500); // simulate time taken to "consume" an item (slower than producer)
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Consumer interrupted.");
+        }
+    }
+}
