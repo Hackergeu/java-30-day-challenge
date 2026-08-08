@@ -1,0 +1,107 @@
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatServer {
+
+    static final int PORT = 5000;
+
+    // Shared list of all connected clients' writers, so any client's message
+    // can be broadcast to everyone. Must be synchronized since multiple
+    // client threads will read/write this list concurrently.
+    static List<PrintWriter> clientWriters = new ArrayList<>();
+
+    public static void main(String[] args) {
+        System.out.println("Chat server starting on port " + PORT + "...");
+
+        try (ServerSocket serverSocket = new ServerSocket(PORT)) {
+            System.out.println("Server is listening. Waiting for clients...");
+
+            while (true) {
+                // Blocking call — waits here until a client connects
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("New client connected: " + clientSocket.getInetAddress());
+
+                // Each client gets its own thread, so the server can
+                // handle many clients at once without blocking on one
+                ClientHandler handler = new ClientHandler(clientSocket);
+                new Thread(handler).start();
+            }
+
+        } catch (IOException e) {
+            System.out.println("Server error: " + e.getMessage());
+        }
+    }
+
+    // Sends a message to every connected client
+    static void broadcast(String message) {
+        synchronized (clientWriters) {
+            for (PrintWriter writer : clientWriters) {
+                writer.println(message);
+            }
+        }
+    }
+
+    // Handles a single client's connection: reading their messages
+    // and broadcasting them to everyone else
+    static class ClientHandler implements Runnable {
+        private Socket socket;
+        private PrintWriter out;
+        private String username;
+
+        ClientHandler(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+
+                // First message from the client is treated as their username
+                out.println("Enter your username:");
+                username = in.readLine();
+                if (username == null) {
+                    return; // client disconnected before sending anything
+                }
+
+                // Register this client's writer so broadcast() can reach them
+                synchronized (clientWriters) {
+                    clientWriters.add(out);
+                }
+
+                broadcast(username + " has joined the chat!");
+                System.out.println(username + " connected.");
+
+                String message;
+                // readLine() blocks here until the client sends something,
+                // or returns null if the client disconnects
+                while ((message = in.readLine()) != null) {
+                    broadcast(username + ": " + message);
+                }
+
+            } catch (IOException e) {
+                System.out.println("Connection error with " + username + ": " + e.getMessage());
+            } finally {
+                // Cleanup when the client disconnects
+                if (out != null) {
+                    synchronized (clientWriters) {
+                        clientWriters.remove(out);
+                    }
+                }
+                if (username != null) {
+                    broadcast(username + " has left the chat.");
+                    System.out.println(username + " disconnected.");
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    // ignore — socket is being torn down anyway
+                }
+            }
+        }
+    }
+}
