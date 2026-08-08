@@ -1,0 +1,42 @@
+import java.io.*;
+import java.net.*;
+
+public class ChatClient {
+
+    static final String SERVER_ADDRESS = "localhost";
+    static final int PORT = 5000;
+
+    public static void main(String[] args) {
+        try (Socket socket = new Socket(SERVER_ADDRESS, PORT)) {
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+
+            // --- Thread 1: listens for incoming messages from the server ---
+            // Runs independently so we can receive messages at any time,
+            // even while the main thread is blocked waiting for our own input
+            Thread listenerThread = new Thread(() -> {
+                String serverMessage;
+                try {
+                    while ((serverMessage = in.readLine()) != null) {
+                        System.out.println(serverMessage);
+                    }
+                } catch (IOException e) {
+                    System.out.println("Disconnected from server.");
+                }
+            });
+            listenerThread.start();
+
+            // --- Main thread: reads console input and sends it to the server ---
+            String userInput;
+            while ((userInput = console.readLine()) != null) {
+                out.println(userInput);
+            }
+
+        } catch (IOException e) {
+            System.out.println("Could not connect to server: " + e.getMessage());
+        }
+    }
+}
