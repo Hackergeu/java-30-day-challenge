@@ -1,0 +1,156 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class HotelManagementSystem {
+
+    static Scanner sc = new Scanner(System.in);
+    static HotelManager manager = HotelManager.getInstance();
+
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            printMenu();
+            choice = readInt("Enter your choice: ");
+
+            switch (choice) {
+                case 1 -> viewAvailableRooms();
+                case 2 -> createBooking();
+                case 3 -> viewAllBookings();
+                case 4 -> checkOutGuest();
+                case 5 -> System.out.println("Thank you for using the Hotel Management System!");
+                default -> System.out.println("Invalid choice. Please pick between 1-5.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+
+    private static void printMenu() {
+        System.out.println("\n===== Hotel Management System =====");
+        System.out.println("1. View Available Rooms");
+        System.out.println("2. Create Booking");
+        System.out.println("3. View All Bookings");
+        System.out.println("4. Check-out (End a Booking)");
+        System.out.println("5. Exit");
+    }
+
+    private static void viewAvailableRooms() {
+        List<Room> available = manager.getAvailableRooms();
+        System.out.println("\n--- Available Rooms ---");
+        if (available.isEmpty()) {
+            System.out.println("No rooms available right now.");
+            return;
+        }
+        for (Room room : available) {
+            System.out.println(room);
+        }
+    }
+
+    private static void createBooking() {
+        System.out.println("\n--- New Booking ---");
+
+        List<Room> available = manager.getAvailableRooms();
+        if (available.isEmpty()) {
+            System.out.println("Sorry, no rooms are available right now.");
+            return;
+        }
+
+        System.out.println("Available rooms:");
+        for (Room room : available) {
+            System.out.println(room);
+        }
+
+        System.out.print("Enter room number to book: ");
+        String roomNumber = sc.nextLine();
+        Room room = manager.findRoomByNumber(roomNumber);
+
+        if (room == null) {
+            System.out.println("No such room exists.");
+            return;
+        }
+        if (room.isBooked()) {
+            System.out.println("That room is already booked.");
+            return;
+        }
+
+        System.out.print("Guest name: ");
+        String name = sc.nextLine();
+        System.out.print("Guest phone: ");
+        String phone = sc.nextLine();
+        System.out.print("Guest email: ");
+        String email = sc.nextLine();
+        Guest guest = new Guest(name, phone, email);
+
+        LocalDate checkIn = readDate("Check-in date (yyyy-MM-dd): ");
+        LocalDate checkOut = readDate("Check-out date (yyyy-MM-dd): ");
+
+        List<String> addOns = new ArrayList<>();
+        System.out.print("Add any add-ons, comma separated (or press Enter for none): ");
+        String addOnInput = sc.nextLine();
+        if (!addOnInput.isBlank()) {
+            for (String item : addOnInput.split(",")) {
+                addOns.add(item.trim());
+            }
+        }
+
+        try {
+            Booking booking = manager.createBooking(guest, room, checkIn, checkOut, addOns);
+            System.out.println("\nBooking confirmed!");
+            System.out.println(booking);
+        } catch (IllegalStateException e) {
+            System.out.println("Could not create booking: " + e.getMessage());
+        }
+    }
+
+    private static void viewAllBookings() {
+        List<Booking> bookings = manager.getAllBookings();
+        System.out.println("\n--- All Bookings ---");
+        if (bookings.isEmpty()) {
+            System.out.println("No bookings yet.");
+            return;
+        }
+        for (Booking booking : bookings) {
+            System.out.println(booking);
+        }
+    }
+
+    private static void checkOutGuest() {
+        viewAllBookings();
+        int bookingId = readInt("\nEnter booking ID to check out: ");
+        boolean success = manager.checkOut(bookingId);
+        if (success) {
+            System.out.println("Checked out successfully. Room is now available.");
+        } else {
+            System.out.println("No booking found with that ID.");
+        }
+    }
+
+    private static int readInt(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = sc.nextLine();
+            try {
+                return Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+
+    private static LocalDate readDate(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = sc.nextLine().trim();
+            try {
+                return LocalDate.parse(input);
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid format. Please use yyyy-MM-dd (e.g. 2026-08-15).");
+            }
+        }
+    }
+}
