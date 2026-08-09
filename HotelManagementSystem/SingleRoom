@@ -1,0 +1,11 @@
+public class SingleRoom extends Room {
+
+    public SingleRoom(String roomNumber) {
+        super(roomNumber, 1500.0, 1);
+    }
+
+    @Override
+    public String getRoomType() {
+        return "Single";
+    }
+}
