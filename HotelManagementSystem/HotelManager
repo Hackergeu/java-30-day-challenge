@@ -1,0 +1,131 @@
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+// SINGLETON PATTERN
+// There must only ever be ONE HotelManager in the program -- it owns the
+// single source of truth for rooms and bookings. If two instances existed,
+// they'd each have their own separate lists, and data would go inconsistent.
+public class HotelManager {
+
+    private static HotelManager instance;
+
+    private final List<Room> rooms;
+    private final List<Booking> bookings;
+    private int nextBookingId;
+
+    // Private constructor -- nobody outside this class can call "new HotelManager()"
+    private HotelManager() {
+        rooms = new ArrayList<>();
+        bookings = new ArrayList<>();
+        nextBookingId = 1;
+        initializeRooms();
+        loadExistingBookings();
+    }
+
+    // The only way to get access to the manager. Synchronized so that even
+    // if two threads called this at the exact same moment, only one instance
+    // ever gets created.
+    public static synchronized HotelManager getInstance() {
+        if (instance == null) {
+            instance = new HotelManager();
+        }
+        return instance;
+    }
+
+    // Seeds a small fixed set of rooms, created through the Factory
+    private void initializeRooms() {
+        rooms.add(RoomFactory.createRoom("SINGLE", "S101"));
+        rooms.add(RoomFactory.createRoom("SINGLE", "S102"));
+        rooms.add(RoomFactory.createRoom("DOUBLE", "D201"));
+        rooms.add(RoomFactory.createRoom("DOUBLE", "D202"));
+        rooms.add(RoomFactory.createRoom("SUITE", "SU301"));
+    }
+
+    // Restores any bookings saved from a previous run of the program
+    private void loadExistingBookings() {
+        List<Booking> loaded = FileManager.loadBookings(rooms);
+        bookings.addAll(loaded);
+        for (Booking booking : loaded) {
+            if (booking.getBookingId() >= nextBookingId) {
+                nextBookingId = booking.getBookingId() + 1;
+            }
+        }
+    }
+
+    public List<Room> getAllRooms() {
+        return rooms;
+    }
+
+    public List<Room> getAvailableRooms() {
+        List<Room> available = new ArrayList<>();
+        for (Room room : rooms) {
+            if (!room.isBooked()) {
+                available.add(room);
+            }
+        }
+        return available;
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookings;
+    }
+
+    public Room findRoomByNumber(String roomNumber) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber().equalsIgnoreCase(roomNumber)) {
+                return room;
+            }
+        }
+        return null;
+    }
+
+    // Creates a booking via the Builder, marks the room unavailable,
+    // stores it in memory, and persists it to file
+    public Booking createBooking(Guest guest, Room room, LocalDate checkIn,
+                                  LocalDate checkOut, List<String> addOns) {
+        if (room.isBooked()) {
+            throw new IllegalStateException("Room " + room.getRoomNumber() + " is already booked");
+        }
+
+        Booking.Builder builder = new Booking.Builder()
+                .bookingId(nextBookingId)
+                .guest(guest)
+                .room(room)
+                .checkIn(checkIn)
+                .checkOut(checkOut);
+
+        for (String addOn : addOns) {
+            builder.addOn(addOn);
+        }
+
+        Booking booking = builder.build();
+
+        room.setBooked(true);
+        bookings.add(booking);
+        nextBookingId++;
+        FileManager.saveBooking(booking);
+
+        return booking;
+    }
+
+    // Frees up the room and removes the booking, both in memory and on disk
+    public boolean checkOut(int bookingId) {
+        Booking toRemove = null;
+        for (Booking booking : bookings) {
+            if (booking.getBookingId() == bookingId) {
+                toRemove = booking;
+                break;
+            }
+        }
+
+        if (toRemove == null) {
+            return false;
+        }
+
+        toRemove.getRoom().setBooked(false);
+        bookings.remove(toRemove);
+        FileManager.rewriteAll(bookings);
+        return true;
+    }
+}
