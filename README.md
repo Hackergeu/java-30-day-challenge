@@ -64,7 +64,7 @@ The goal is simple: **one project a day, consistently**, moving from basic synta
 ### Phase 6: Capstone (Day 30)
 | Day | Project | Concepts | Status |
 |-----|---------|----------|--------|
-| 30 | Hotel/Restaurant Management System | Full OOP design + Collections + File I/O + Design Patterns (Singleton, Factory, Builder) | 🔲 |
+| 30 | Hotel/Restaurant Management System | Full OOP design + Collections + File I/O + Design Patterns (Singleton, Factory, Builder) | ✅ |
 
 ## 🛠️ Tech Stack
 - **Language:** Java (Core)
