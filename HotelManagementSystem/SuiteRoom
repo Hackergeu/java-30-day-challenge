@@ -1,0 +1,11 @@
+public class SuiteRoom extends Room {
+
+    public SuiteRoom(String roomNumber) {
+        super(roomNumber, 5000.0, 4);
+    }
+
+    @Override
+    public String getRoomType() {
+        return "Suite";
+    }
+}
