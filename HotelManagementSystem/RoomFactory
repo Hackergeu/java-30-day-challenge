@@ -1,0 +1,19 @@
+// FACTORY PATTERN
+// Centralizes room creation so the rest of the codebase asks for a room by
+// TYPE (a string) instead of knowing which concrete class to "new" up.
+// If a new room type is added later, only this class needs to change.
+public class RoomFactory {
+
+    public static Room createRoom(String type, String roomNumber) {
+        switch (type.toUpperCase()) {
+            case "SINGLE":
+                return new SingleRoom(roomNumber);
+            case "DOUBLE":
+                return new DoubleRoom(roomNumber);
+            case "SUITE":
+                return new SuiteRoom(roomNumber);
+            default:
+                throw new IllegalArgumentException("Unknown room type: " + type);
+        }
+    }
+}
