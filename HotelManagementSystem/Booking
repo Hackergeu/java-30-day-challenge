@@ -1,0 +1,132 @@
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+// BUILDER PATTERN
+// A Booking has several required fields (guest, room, dates) plus optional
+// ones (add-ons). Instead of a long constructor with easy-to-mix-up
+// parameters, callers chain readable steps: new Booking.Builder()
+//     .guest(g).room(r).checkIn(d1).checkOut(d2).addOn("Breakfast").build()
+public class Booking {
+
+    // Flat charge per add-on for the whole stay, to keep the cost math simple
+    private static final double ADD_ON_COST = 200.0;
+
+    private final int bookingId;
+    private final Guest guest;
+    private final Room room;
+    private final LocalDate checkIn;
+    private final LocalDate checkOut;
+    private final long nights;
+    private final List<String> addOns;
+    private final double totalCost;
+
+    // Constructor is private -- a Booking can ONLY be created through Builder.build()
+    private Booking(Builder builder) {
+        this.bookingId = builder.bookingId;
+        this.guest = builder.guest;
+        this.room = builder.room;
+        this.checkIn = builder.checkIn;
+        this.checkOut = builder.checkOut;
+        this.addOns = builder.addOns;
+        this.nights = ChronoUnit.DAYS.between(checkIn, checkOut);
+        this.totalCost = (nights * room.getPricePerNight()) + (addOns.size() * ADD_ON_COST);
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public LocalDate getCheckIn() {
+        return checkIn;
+    }
+
+    public LocalDate getCheckOut() {
+        return checkOut;
+    }
+
+    public long getNights() {
+        return nights;
+    }
+
+    public List<String> getAddOns() {
+        return addOns;
+    }
+
+    public double getTotalCost() {
+        return totalCost;
+    }
+
+    @Override
+    public String toString() {
+        String addOnText = addOns.isEmpty() ? "None" : String.join(", ", addOns);
+        return String.format(
+                "Booking #%d | Guest: %s | Room: %s (%s) | %s to %s (%d nights) | " +
+                        "Add-ons: %s | Total: Rs. %.2f",
+                bookingId, guest.getName(), room.getRoomNumber(), room.getRoomType(),
+                checkIn, checkOut, nights, addOnText, totalCost);
+    }
+
+    // ---------------- Builder ----------------
+    public static class Builder {
+        private int bookingId;
+        private Guest guest;
+        private Room room;
+        private LocalDate checkIn;
+        private LocalDate checkOut;
+        private final List<String> addOns = new ArrayList<>();
+
+        public Builder bookingId(int bookingId) {
+            this.bookingId = bookingId;
+            return this;
+        }
+
+        public Builder guest(Guest guest) {
+            this.guest = guest;
+            return this;
+        }
+
+        public Builder room(Room room) {
+            this.room = room;
+            return this;
+        }
+
+        public Builder checkIn(LocalDate checkIn) {
+            this.checkIn = checkIn;
+            return this;
+        }
+
+        public Builder checkOut(LocalDate checkOut) {
+            this.checkOut = checkOut;
+            return this;
+        }
+
+        public Builder addOn(String item) {
+            this.addOns.add(item);
+            return this;
+        }
+
+        // Validates everything required is present, then constructs the
+        // actual immutable Booking object
+        public Booking build() {
+            if (guest == null || room == null || checkIn == null || checkOut == null) {
+                throw new IllegalStateException("Guest, room, check-in and check-out are all required");
+            }
+            if (!checkOut.isAfter(checkIn)) {
+                throw new IllegalStateException("Check-out date must be after check-in date");
+            }
+            Collections.sort(addOns); // just for consistent display/order
+            return new Booking(this);
+        }
+    }
+}
