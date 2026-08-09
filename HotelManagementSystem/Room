@@ -1,0 +1,47 @@
+// Base class for all room types. Concrete subclasses (SingleRoom, DoubleRoom,
+// SuiteRoom) fill in the price/capacity and are created through RoomFactory,
+// so the rest of the program never calls "new SingleRoom()" directly.
+public abstract class Room {
+
+    private String roomNumber;
+    private double pricePerNight;
+    private int capacity;
+    private boolean booked;
+
+    public Room(String roomNumber, double pricePerNight, int capacity) {
+        this.roomNumber = roomNumber;
+        this.pricePerNight = pricePerNight;
+        this.capacity = capacity;
+        this.booked = false;
+    }
+
+    // Each subclass must say what type of room it is
+    public abstract String getRoomType();
+
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public boolean isBooked() {
+        return booked;
+    }
+
+    public void setBooked(boolean booked) {
+        this.booked = booked;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s - Rs. %.2f/night - Capacity: %d - %s",
+                roomNumber, getRoomType(), pricePerNight, capacity,
+                booked ? "Booked" : "Available");
+    }
+}
